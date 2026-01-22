@@ -16,19 +16,24 @@ public class FhirObservationController {
         this.service = service;
     }
 
+    // POST /api/fhir/observation
     @PostMapping
-    public FhirObservationEntity create(@RequestBody FhirObservationEntity entity) {
-        return service.save(entity);
+    public FhirObservationEntity create(@RequestBody FhirObservationEntity observation) {
+        return service.save(observation);
     }
 
+    // GET /api/fhir/observation
     @GetMapping
     public List<FhirObservationEntity> getAll(
-            @RequestParam(required = false) String risk,
-            @RequestParam(required = false) String patientId) {
-
-        if (risk != null) return service.getByRisk(risk);
-        if (patientId != null) return service.getByPatient(patientId);
-
+            @RequestParam(required = false) String patientId,
+            @RequestParam(required = false) String bmiCategory
+    ) {
+        if (patientId != null) {
+            return service.searchByPatient(patientId);
+        }
+        if (bmiCategory != null) {
+            return service.filterByBmi(bmiCategory);
+        }
         return service.getAll();
     }
 }

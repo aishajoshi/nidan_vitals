@@ -15,19 +15,35 @@ public class FhirObservationService {
         this.repository = repository;
     }
 
-    public FhirObservationEntity save(FhirObservationEntity entity) {
-        return repository.save(entity);
+    public FhirObservationEntity save(FhirObservationEntity obs) {
+
+        // BMI category logic
+        if (obs.getBmi() != null) {
+            if (obs.getBmi() >= 30) obs.setBmiCategory("Obese");
+            else if (obs.getBmi() >= 25) obs.setBmiCategory("Overweight");
+            else obs.setBmiCategory("Normal");
+        }
+
+        // Risk logic
+        if ((obs.getBmi() != null && obs.getBmi() >= 30) ||
+                (obs.getSystolicBp() != null && obs.getSystolicBp() >= 140)) {
+            obs.setRiskStatus("Red");
+        } else {
+            obs.setRiskStatus("Green");
+        }
+
+        return repository.save(obs);
     }
 
     public List<FhirObservationEntity> getAll() {
         return repository.findAll();
     }
 
-    public List<FhirObservationEntity> getByRisk(String risk) {
-        return repository.findByRiskStatus(risk);
+    public List<FhirObservationEntity> searchByPatient(String patientId) {
+        return repository.findByPatientId(patientId);
     }
 
-    public List<FhirObservationEntity> getByPatient(String patientId) {
-        return repository.findByPatientId(patientId);
+    public List<FhirObservationEntity> filterByBmi(String category) {
+        return repository.findByBmiCategory(category);
     }
 }
