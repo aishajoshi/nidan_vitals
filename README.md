@@ -22,5 +22,5 @@ Ensure MySQL credentials are set in application.properties
 Run:NidanVitalsApplication.java
 (frontend is planned but not done yet)
 (i did not write each line of code myself i used the AI tools but not copied blindly, i understand the structure)
-
+change made for pr
 
